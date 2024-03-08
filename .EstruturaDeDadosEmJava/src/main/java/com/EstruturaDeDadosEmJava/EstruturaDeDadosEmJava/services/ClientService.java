@@ -29,4 +29,10 @@ public class ClientService {
 
         return new ClientDTO(entity);
     }
+
+    @Transactional
+    public void deleteClient(Long idClient) {
+        clientRepository.deleteById(idClient);
+    }
+
 }
