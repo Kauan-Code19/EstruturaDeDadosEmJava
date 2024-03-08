@@ -10,10 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ClientService {
     private final ClientRepository clientRepository;
+    private final HashMapService hashMapService;
 
     @Autowired
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository, HashMapService hashMapService) {
         this.clientRepository = clientRepository;
+        this.hashMapService = hashMapService;
     }
 
     @Transactional
@@ -27,12 +29,27 @@ public class ClientService {
 
         entity = clientRepository.save(entity);
 
+        hashMapService.addClientHashTable(entity);
+
         return new ClientDTO(entity);
     }
 
     @Transactional
     public void deleteClient(Long idClient) {
         clientRepository.deleteById(idClient);
+
+        ClientEntity entity = clientRepository.getReferenceById(idClient);
+
+        hashMapService.deleteClientHashTable(entity.getCpf());
+    }
+
+    @Transactional
+    public ClientDTO getClientHashService(Long idCLient) {
+        ClientEntity clientEntityReference = clientRepository.getReferenceById(idCLient);
+
+        ClientEntity clientEntity =  hashMapService.getClientHashTable(clientEntityReference.getCpf());
+
+        return  new ClientDTO(clientEntity);
     }
 
 }

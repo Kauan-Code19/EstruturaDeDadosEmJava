@@ -36,4 +36,14 @@ public class ClientController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{idClient}")
+    public ResponseEntity<ClientResponseDTO> getClient (@PathVariable Long idCLient) {
+        ClientDTO clientDTO = clientService.getClientHashService(idCLient);
+
+        ClientResponseDTO clientResponseDTO = new ClientResponseDTO(clientDTO.getName(), clientDTO.getTelephone(),
+                clientDTO.getEmail());
+
+        return ResponseEntity.ok().body(clientResponseDTO);
+    }
 }
